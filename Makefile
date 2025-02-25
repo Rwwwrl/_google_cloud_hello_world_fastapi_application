@@ -9,3 +9,10 @@ stop:
 
 container_shell:
 	docker exec -it fastapi bash
+
+
+
+# google cloud
+
+deploy:
+		yes | gcloud app deploy

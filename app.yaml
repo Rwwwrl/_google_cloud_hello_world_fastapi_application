@@ -1,0 +1,7 @@
+runtime: python311
+
+entrypoint: uvicorn src.main:app --port $PORT
+
+handlers:
+  - url: /.*
+    script: auto
