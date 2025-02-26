@@ -1,8 +1,6 @@
 from fastapi import FastAPI
 
+from src.routes import api_router
+
 app = FastAPI()
-
-
-@app.get("/")
-def hello_world():
-    return {"message": "Hello, World!"}
+app.include_router(router=api_router)

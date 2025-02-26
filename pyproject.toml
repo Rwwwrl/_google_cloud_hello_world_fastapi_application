@@ -12,6 +12,7 @@ requires = ["poetry-core"]
 python = "^3.11.8"
 fastapi = { extras = ["standard"], version = "^0.115.2" }
 uvicorn = "^0.34.0"
+pydantic-settings = "^2.8.0"
 
 [tool.poetry.group.dev.dependencies]
 black = "^23.0.0"
