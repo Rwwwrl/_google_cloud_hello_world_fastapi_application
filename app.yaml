@@ -1,6 +1,8 @@
-runtime: python311
+runtime: custom
+env: flex
+service: default
 
-entrypoint: uvicorn src.main:app --port $PORT
+entrypoint: poetry run uvicorn src.main:app --port $PORT
 
 handlers:
   - url: /.*

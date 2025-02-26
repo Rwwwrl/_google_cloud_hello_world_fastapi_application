@@ -22,6 +22,5 @@ RUN poetry install --no-root --without dev
 
 COPY src src
 
-EXPOSE 8000
-
-CMD ["poetry", "run", "uvicorn", "src.main:app", "--host", "0.0.0.0", "--port", "8000"]
+# needed for google app engine (you should not change it)
+EXPOSE 8080

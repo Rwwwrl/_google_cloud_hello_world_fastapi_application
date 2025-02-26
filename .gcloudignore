@@ -137,7 +137,8 @@ celerybeat.pid
 *.sage.py
 
 # Environments
-env.toml
+# for now I do not ignore env.toml, will improve it later
+# env.toml
 .env
 .venv
 env/
@@ -182,3 +183,9 @@ cython_debug/
 .idea/
 .vscode/
 .DS_Store
+
+# project specific
+# we should keep only src folder
+.pre-commit-config.yaml
+Makefile
+Readme.md
