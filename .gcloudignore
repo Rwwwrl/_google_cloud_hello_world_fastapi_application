@@ -137,8 +137,6 @@ celerybeat.pid
 *.sage.py
 
 # Environments
-# for now I do not ignore env.toml, will improve it later
-# env.toml
 .env
 .venv
 env/
@@ -189,3 +187,8 @@ cython_debug/
 .pre-commit-config.yaml
 Makefile
 Readme.md
+.github
+
+# secrets
+# for now I do not ignore env.toml, will improve it later
+# env.toml

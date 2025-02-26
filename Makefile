@@ -15,4 +15,4 @@ container_shell:
 # google cloud
 
 deploy:
-		yes | gcloud app deploy
+	gcloud app deploy --quiet

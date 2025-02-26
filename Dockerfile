@@ -1,4 +1,4 @@
-FROM python:3.11-slim
+FROM python:3.11
 
 ENV POETRY_VERSION=1.8.2 \
     POETRY_VIRTUALENVS_IN_PROJECT=true \
@@ -21,6 +21,9 @@ COPY pyproject.toml poetry.lock ./
 RUN poetry install --no-root --without dev
 
 COPY src src
+COPY env.toml env.toml
 
 # needed for google app engine (you should not change it)
 EXPOSE 8080
+
+CMD ["poetry", "run", "uvicorn", "src.main:app", "--host", "0.0.0.0", "--port", "8080"]

@@ -4,7 +4,6 @@ from src.settings import settings
 
 api_router = APIRouter(prefix="/api")
 
-
 @api_router.get("/")
 def hello_world():
     return {"message": "Hello, World!"}
