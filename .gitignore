@@ -122,7 +122,6 @@ celerybeat.pid
 *.sage.py
 
 # Environments
-env.toml
 .env
 .venv
 env/
@@ -167,3 +166,7 @@ cython_debug/
 .idea/
 .vscode/
 .DS_Store
+
+# secrets
+# for now I do not ignore env.toml, will improve it later
+# env.toml

@@ -1,0 +1,9 @@
+name: Deploy to Google App Engine
+
+on:
+  push:
+    branches: ["test*"]
+
+jobs:
+  deploy_to_app_engine:
+    uses: ./.github/workflows/deploy_to_app_engine.yml
