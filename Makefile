@@ -1,3 +1,14 @@
+# Docker
+up:
+	docker compose -p hello-world-fastapi-application up -d
+
+down:
+	docker compose -p hello-world-fastapi-application down
+
+restart:
+	$(MAKE) down
+	$(MAKE) up
+
 build:
 	docker build -f Dockerfile -t hello-world-fastapi-application:latest .
 
@@ -7,12 +18,8 @@ run:
 stop:
 	docker stop fastapi
 
-container_shell:
-	docker exec -it fastapi bash
 
-
-# tests
-
+# Tests
 build_tests_image:
 	docker build -f Dockerfile --target image_for_running_tests -t hello-world-fastapi-application-test-stage:latest .
 
@@ -20,7 +27,6 @@ run_tests:
 	docker run --rm hello-world-fastapi-application-test-stage:latest
 
 
-# google cloud
-
+# Google cloud
 deploy:
 	gcloud app deploy --quiet
