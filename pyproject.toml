@@ -20,6 +20,10 @@ ruff = "^0.9.6"
 isort = "^5.13.1"
 pre-commit = "^4.1.0"
 
+
+[tool.poetry.group.tests.dependencies]
+pytest = "^8.3.4"
+
 [tool.black]
 line-length = 120
 target-version = ["py311"]

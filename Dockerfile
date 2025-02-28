@@ -1,4 +1,4 @@
-FROM python:3.11
+FROM python:3.11 AS base_image
 
 ENV POETRY_VERSION=1.8.2 \
     POETRY_VIRTUALENVS_IN_PROJECT=true \
@@ -18,9 +18,24 @@ ENV PATH="/root/.local/bin:$PATH"
 
 COPY pyproject.toml poetry.lock ./
 
-RUN poetry install --no-root --without dev
+RUN poetry install --no-root --only main
 
 COPY src src
+
+
+
+FROM base_image AS image_for_running_tests
+
+COPY pytest.ini pytest.ini
+
+RUN poetry install --only tests
+
+CMD ["poetry", "run", "pytest", "src", "-c", "pytest.ini"]
+
+
+
+FROM base_image AS prod_image
+
 COPY env.toml env.toml
 
 # needed for google app engine (you should not change it)
