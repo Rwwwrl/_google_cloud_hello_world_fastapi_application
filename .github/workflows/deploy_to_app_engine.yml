@@ -13,11 +13,11 @@ jobs:
       - name: Authenticate with Google Cloud
         uses: google-github-actions/auth@v2
         with:
-          project_id: ${{ vars.GCP_PROJECT_ID }}
+          project_id: ${{ secrets.GCP_PROJECT_ID }}
           credentials_json: ${{ secrets.GCP_SA_KEY }}
 
       - name: Set up Google Cloud SDK
         uses: google-github-actions/setup-gcloud@v2
 
       - name: Deploy to Google App Engine
-        run: gcloud app deploy --service-account=${{ vars.GCP_SA_EMAIL }}
+        run: gcloud app deploy --service-account=${{ secrets.GCP_SA_EMAIL }}

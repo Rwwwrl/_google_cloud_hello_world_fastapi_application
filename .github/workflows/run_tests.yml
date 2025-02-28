@@ -1,0 +1,35 @@
+name: Run tests
+
+on:
+  workflow_call:
+    inputs:
+      src:
+        required: true
+        type: string
+      poetry_dependencies:
+        required: true
+        type: string
+
+jobs:
+  run_tests:
+    runs-on: ubuntu-latest
+    # if: ${{ inputs.src == 'true' || inputs.poetry_dependecies == 'true' }}
+    steps:
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Build image for tests
+        uses: docker/build-push-action@v5
+        with:
+          load: true
+          push: false
+          target: image_for_running_tests
+          tags: hello-world-fastapi-application-test-stage:latest
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+
+      - name: run pytest
+        uses: addnab/docker-run-action@v3
+        with:
+          image: hello-world-fastapi-application-test-stage:latest
+          run: poetry run pytest src/ -c pytest.ini

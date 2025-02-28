@@ -2,8 +2,34 @@ name: Deploy to Google App Engine
 
 on:
   push:
-    branches: ["test*"]
+    # branches: ["test*"]
+    branches: ["main"]
 
 jobs:
-  deploy_to_app_engine:
-    uses: ./.github/workflows/deploy_to_app_engine.yml
+  get_changes:
+    runs-on: ubuntu-latest
+    outputs:
+      src: ${{ steps.changes.outputs.src }}
+      poetry_dependecies: ${{ steps.changes.outputs.dependency_versions }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: dorny/paths-filter@v3
+        id: changes
+        with:
+          filters: |
+            src:
+              - 'src/**'
+            poetry_dependecies:
+              - 'poetry.lock'
+
+  run_tests:
+    needs: get_changes
+    uses: ./.github/workflows/run_tests.yml
+    with:
+      src: ${{ needs.get_changes.outputs.src }}
+      poetry_dependencies: ${{ needs.get_changes.outputs.poetry_dependencies }}
+
+  # deploy_to_app_engine:
+  #   needs: run_tests
+  #   uses: ./.github/workflows/deploy_to_app_engine.yml
+  #   secrets: inherit

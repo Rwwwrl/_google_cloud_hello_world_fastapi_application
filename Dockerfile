@@ -30,8 +30,6 @@ COPY pytest.ini pytest.ini
 
 RUN poetry install --only tests
 
-CMD ["poetry", "run", "pytest", "src", "-c", "pytest.ini"]
-
 
 
 FROM base_image AS prod_image
@@ -40,5 +38,3 @@ COPY env.toml env.toml
 
 # needed for google app engine (you should not change it)
 EXPOSE 8080
-
-CMD ["poetry", "run", "uvicorn", "src.main:app", "--host", "0.0.0.0", "--port", "8080"]
