@@ -19,14 +19,6 @@ stop:
 	docker stop fastapi
 
 
-# Tests
-build_tests_image:
-	docker build -f Dockerfile --target image_for_running_tests -t hello-world-fastapi-application-test-stage:latest .
-
-run_tests:
-	docker run --rm hello-world-fastapi-application-test-stage:latest
-
-
 # Google cloud
 deploy:
 	gcloud app deploy --quiet
