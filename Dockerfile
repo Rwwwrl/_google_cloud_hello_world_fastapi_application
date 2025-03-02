@@ -1,3 +1,4 @@
+# BASE STAGE
 FROM python:3.11 AS base_image
 
 ENV POETRY_VERSION=1.8.2 \
@@ -24,17 +25,23 @@ COPY src src
 
 
 
+# STAGE "image_for_running_tests"
 FROM base_image AS image_for_running_tests
 
 COPY pytest.ini pytest.ini
 
 RUN poetry install --only tests
 
+CMD ["poetry", "run", "pytest", "src/tests/", "-c", "pytest.ini"]
 
 
+
+# STAGE "prod_image"
 FROM base_image AS prod_image
 
 COPY env.toml env.toml
 
 # needed for google app engine (you should not change it)
 EXPOSE 8080
+
+CMD ["poetry", "run", "uvicornn", "src.main:app", "--host", "0.0.0.0", "--port", "8080"]
