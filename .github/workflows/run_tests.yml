@@ -11,14 +11,17 @@ jobs:
         image: mongo:latest
         ports:
           - 27017:27017
-        options: >-
-        --health-cmd "mongo --eval 'db.runCommand({ ping: 1 })'"
-        --health-interval 10s
-        --health-timeout 5s
-        --health-retries 5
-
 
     steps:
+      - name: Wait for MongoDB to be ready
+        run: |
+          for i in {1..30}; do
+            nc -z localhost 27017 && echo "MongoDB is ready" && exit 0
+            echo "Waiting for MongoDB..."
+            sleep 2
+          done
+          echo "MongoDB did not become ready in time" && exit 1
+
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
 
