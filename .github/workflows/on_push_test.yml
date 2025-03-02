@@ -2,7 +2,6 @@ name: Deploy to Google App Engine
 
 on:
   push:
-    # branches: ["test*"]
     branches: ["main"]
 
 jobs:
@@ -23,11 +22,9 @@ jobs:
               - 'poetry.lock'
 
   run_tests:
+    # if: ${{ needs.get_changes.outputs.src == 'true' || needs.get_changes.outputs.poetry_dependencies == 'true' }}
     needs: get_changes
     uses: ./.github/workflows/run_tests.yml
-    with:
-      src: ${{ needs.get_changes.outputs.src }}
-      poetry_dependencies: ${{ needs.get_changes.outputs.poetry_dependencies }}
 
   # deploy_to_app_engine:
   #   needs: run_tests
