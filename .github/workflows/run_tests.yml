@@ -23,3 +23,4 @@ jobs:
         uses: addnab/docker-run-action@v3
         with:
           image: app:image_for_running_tests_in_github_actions
+          run: poetry run pytest src/tests/ -c pytest.ini

@@ -34,8 +34,6 @@ COPY env.github_actions.toml env.toml
 
 RUN poetry install --only tests
 
-CMD ["poetry", "run", "pytest", "src/tests/", "-c", "pytest.ini"]
-
 
 
 # STAGE "prod_image"
