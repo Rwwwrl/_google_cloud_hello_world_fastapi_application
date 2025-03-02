@@ -6,6 +6,7 @@ from motor.motor_asyncio import AsyncIOMotorClient
 
 from src.main import app
 from src.models import User
+from src.settings import settings
 
 
 @pytest_asyncio.fixture(scope="session")
@@ -14,7 +15,7 @@ async def mongodb_client():
     Set up a test database for the session.
     """
     # Use a test database URI
-    test_db_uri = "mongodb://127.0.0.1:27017/?replicaSet=rs0"
+    test_db_uri = settings.MONGO_CONNECTION_STRING
     client = AsyncIOMotorClient(test_db_uri)
     client.get_io_loop = asyncio.get_event_loop
     database_name = "test"

@@ -5,11 +5,12 @@ from fastapi import FastAPI, Response, status
 from motor.motor_asyncio import AsyncIOMotorClient
 
 from src.routes import api_router
+from src.settings import settings
 
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
-    client = AsyncIOMotorClient("mongodb://localhost:27017")
+    client = AsyncIOMotorClient(settings.MONGO_CONNECTION_STRING)
     await init_beanie(
         database=client["my_db"],
         document_models=[

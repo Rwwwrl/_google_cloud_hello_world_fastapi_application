@@ -25,14 +25,14 @@ COPY src src
 
 
 
-# STAGE "image_for_running_tests"
-FROM base_image AS image_for_running_tests
+# STAGE "image_for_running_tests_in_github_actions"
+FROM base_image AS image_for_running_tests_in_github_actions
 
 COPY pytest.ini pytest.ini
 
-RUN poetry install --only tests
+COPY env.github_actions.toml env.toml
 
-CMD ["poetry", "run", "pytest", "src/tests/", "-c", "pytest.ini"]
+RUN poetry install --only tests
 
 
 

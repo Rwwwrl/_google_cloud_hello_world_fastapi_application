@@ -13,6 +13,8 @@ class Settings(BaseSettings):
         extra="ignore",
     )
 
+    MONGO_CONNECTION_STRING: str
+
     MY_SECRET_VALUE: str
 
     @classmethod

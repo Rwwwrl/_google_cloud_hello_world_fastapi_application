@@ -9,17 +9,18 @@ jobs:
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
 
-      - name: Build image for tests
+      - name: Build image for running tests
         uses: docker/build-push-action@v5
         with:
           load: true
           push: false
-          target: image_for_running_tests
-          tags: hello-world-fastapi-application-test-stage:latest
+          target: image_for_running_tests_in_github_actions
+          tags: app:image_for_running_tests_in_github_actions
           cache-from: type=gha
           cache-to: type=gha,mode=max
 
-      - name: run pytest
+      - name: Run tests
         uses: addnab/docker-run-action@v3
         with:
-          image: hello-world-fastapi-application-test-stage:latest
+          image: app:image_for_running_tests_in_github_actions
+          run: poetry run pytest src/tests/ -c pytest.ini
