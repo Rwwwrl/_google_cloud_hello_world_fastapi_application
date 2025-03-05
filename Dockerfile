@@ -23,6 +23,8 @@ RUN poetry install --no-root --only main
 
 COPY src src
 
+COPY env.toml env.toml
+
 
 
 # STAGE "image_for_running_tests_in_github_actions"
@@ -30,7 +32,6 @@ FROM base_image AS image_for_running_tests_in_github_actions
 
 COPY pytest.ini pytest.ini
 
-COPY env.github_actions.toml env.toml
 
 RUN poetry install --only tests
 
@@ -38,8 +39,6 @@ RUN poetry install --only tests
 
 # STAGE "prod_image"
 FROM base_image AS prod_image
-
-COPY env.toml env.toml
 
 # needed for google app engine (you should not change it)
 EXPOSE 8080
