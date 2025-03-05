@@ -1,4 +1,4 @@
-name: Deploy to Google App Engine
+name: deploy-to-app-engine
 
 on: workflow_call
 

@@ -1,4 +1,4 @@
-name: Deploy to Google App Engine
+name: on-push-test
 
 on:
   push:
@@ -25,6 +25,7 @@ jobs:
     # if: ${{ needs.get_changes.outputs.src == 'true' || needs.get_changes.outputs.poetry_dependencies == 'true' }}
     needs: get_changes
     uses: ./.github/workflows/called-run-tests.yml
+    secrets: inherit
 
   # deploy_to_app_engine:
   #   needs: run_tests
