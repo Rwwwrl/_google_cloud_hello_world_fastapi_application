@@ -190,5 +190,4 @@ Readme.md
 .github
 
 # secrets
-# for now I do not ignore env.toml, will improve it later
-# env.toml
+env.toml
