@@ -4,9 +4,9 @@ import pytest_asyncio
 from beanie import init_beanie
 from motor.motor_asyncio import AsyncIOMotorClient
 
-from src.main import app
-from src.models import User
-from src.settings import settings
+from fastapi_hello_world.app import app
+from fastapi_hello_world.core.settings import settings
+from fastapi_hello_world.users.models import User
 
 
 @pytest_asyncio.fixture(scope="session")

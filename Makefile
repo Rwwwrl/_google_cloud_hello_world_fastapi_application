@@ -1,13 +1,18 @@
 # Docker
-up_tests_env:
-	docker compose -p tests_env -f docker-compose.tests_env.yml up -d
+up_mongo:
+	docker compose -p fastapi-hello-world -f docker-compose.mongo.yml up -d
 
-down_tests_env:
-	docker compose -p tests_env down
+down_mongo:
+	docker compose -p fastapi-hello-world -f docker-compose.mongo.yml down
 
-restart_tests_env:
-	$(MAKE) down_tests_env
-	$(MAKE) up_tests_env
+restart_mongo:
+	$(MAKE) down_mongo
+	$(MAKE) up_mongo
+
+
+# Tests
+run_pytest:
+	pytest -c pytest.ini fastapi_hello_world/tests -s --disable-warnings
 
 
 # Google cloud

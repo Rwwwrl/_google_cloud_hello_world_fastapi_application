@@ -32,7 +32,6 @@ FROM base_image AS image_for_running_tests_in_github_actions
 
 COPY pytest.ini pytest.ini
 
-
 RUN poetry install --only tests
 
 
@@ -43,4 +42,4 @@ FROM base_image AS prod_image
 # needed for google app engine (you should not change it)
 EXPOSE 8080
 
-CMD ["poetry", "run", "uvicornn", "src.main:app", "--host", "0.0.0.0", "--port", "8080"]
+CMD ["poetry", "run", "uvicornn", "fastapi_hello_world.app:app", "--host", "0.0.0.0", "--port", "8080"]

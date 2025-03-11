@@ -1,6 +1,6 @@
 import pytest
 
-from src.models import User
+from fastapi_hello_world.users.models import User
 
 
 @pytest.mark.asyncio
