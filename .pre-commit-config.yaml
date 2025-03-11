@@ -15,9 +15,10 @@ repos:
 
   # Use the static code checker to find and fix logical errors in python source code.
   - repo: https://github.com/charliermarsh/ruff-pre-commit
-    rev: v0.0.270
+    rev: v0.9.6
     hooks:
       - id: ruff
         language_version: python3
         args:
-        - --fix
+          - --fix
+      - id: ruff-format
