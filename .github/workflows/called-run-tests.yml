@@ -35,7 +35,7 @@ jobs:
         uses: google-github-actions/setup-gcloud@v2
 
       - name: Download env.toml file
-        run: gcloud storage cp ${{ secrets.GCP_GITHUB_ACTIONS_ENV_TOML_PATH }} ./
+        run: gcloud storage cp ${{ vars.GCP_GITHUB_ACTIONS_ENV_TOML_PATH }} ./
 
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
