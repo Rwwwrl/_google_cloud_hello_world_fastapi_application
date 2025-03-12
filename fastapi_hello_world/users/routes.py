@@ -1,7 +1,7 @@
 from fastapi import APIRouter, Request
 from fastapi.templating import Jinja2Templates
 
-from fastapi_hello_world.core.settings import BASE_DIR
+from fastapi_hello_world.core.settings import BASE_DIR, settings
 from fastapi_hello_world.users.models import User
 
 users_api_router = APIRouter(tags=["users"])
@@ -14,7 +14,10 @@ async def index(request: Request):
     return templates.TemplateResponse(
         request=request,
         name="index.html",
-        context={"my_var": 10},
+        context={
+            "api_key": settings.FIREBASE_CONFIG.api_key,
+            "auth_domain": settings.FIREBASE_CONFIG.auth_domain,
+        },
     )
 
 

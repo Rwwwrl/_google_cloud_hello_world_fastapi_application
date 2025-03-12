@@ -12,14 +12,55 @@
       rel="stylesheet"
       href="{{ url_for('static', path='/users/index.css') }}"
     />
-    <!-- <script src="https://www.gstatic.com/firebasejs/8.0/firebase.js"></script> -->
+    <script src="https://www.gstatic.com/firebasejs/8.0/firebase.js"></script>
   </head>
   <body>
     <div class="container">
-      <h2 class="header-google-sign-in-with-redirect">Google Sign-In with Redirect</h2>
+      <h2 class="header-google-sign-in-with-redirect">
+        Google Sign-In with Redirect
+      </h2>
       <button type="button" class="btn btn-primary" id="google-login-btn">
         Login with Google
       </button>
+
+      <script>
+        var config = {
+          apiKey: "{{ api_key }}",
+          authDomain: "{{ auth_domain }}",
+        };
+        firebase.initializeApp(config);
+        const auth = firebase.auth();
+        const provider = new firebase.auth.GoogleAuthProvider();
+
+        let google_identity_access_token = null;
+
+        function googleSignIn() {
+          auth
+            .signInWithPopup(provider)
+            .then((result) => {
+              if (result.user) {
+                result.user.getIdToken().then((token) => {
+                  google_identity_access_token = token;
+                });
+
+                if (result.additionalUserInfo.isNewUser == true) {
+                  console.log("new user registered");
+                } else {
+                  console.log("old user logined");
+                }
+              }
+            })
+            .catch((error) => {
+              console.error("Sign-in error:", error);
+            });
+        }
+
+        document
+          .getElementById("google-login-btn")
+          .addEventListener("click", () => {
+            googleSignIn();
+          });
+      </script>
     </div>
   </body>
 </html>

@@ -1,5 +1,6 @@
 from pathlib import Path
 
+from pydantic import BaseModel
 from pydantic_settings import (
     BaseSettings,
     PydanticBaseSettingsSource,
@@ -10,6 +11,11 @@ from pydantic_settings import (
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 
+class FirebaseConfig(BaseModel):
+    api_key: str
+    auth_domain: str
+
+
 class Settings(BaseSettings):
     model_config = SettingsConfigDict(
         toml_file="env.toml",
@@ -18,6 +24,8 @@ class Settings(BaseSettings):
     )
 
     MONGO_CONNECTION_STRING: str
+
+    FIREBASE_CONFIG: FirebaseConfig
 
     MY_SECRET_VALUE: str
 
