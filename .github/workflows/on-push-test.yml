@@ -16,18 +16,26 @@ jobs:
         id: changes
         with:
           filters: |
-            src:
-              - 'src/**'
+            fastapi_hello_world:
+              - 'fastapi_hello_world/**'
             poetry_dependecies:
               - 'poetry.lock'
+            hello_world_cloud_function:
+              - 'cloud_functions.hello_world/**'
 
   run_tests:
-    if: ${{ needs.get_changes.outputs.src == 'true' || needs.get_changes.outputs.poetry_dependencies == 'true' }}
+    if: ${{ needs.get_changes.outputs.fastapi_hello_world == 'true' || needs.get_changes.outputs.poetry_dependencies == 'true' }}
     needs: get_changes
     uses: ./.github/workflows/called-run-tests.yml
     secrets: inherit
 
+  deploy_hello_world_cloud_function:
+    if: ${{ needs.get_changes.outputs.hello_world_cloud_function == 'true' }}
+    needs: get_changes
+    uses: ./.github/workflows/called-deploy_hello_world_cloud_function.yml
+    secrets: inherit
+
   deploy_to_app_engine:
     needs: run_tests
-    uses: ./.github/workflows/deploy_to_app_engine.yml
+    uses: ./.github/workflows/called-deploy_to_app_engine.yml
     secrets: inherit

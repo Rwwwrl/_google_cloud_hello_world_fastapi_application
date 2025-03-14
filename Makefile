@@ -18,3 +18,19 @@ run_pytest:
 # Google cloud
 deploy:
 	gcloud app deploy --quiet
+
+
+gcloud_set_up:
+	gcloud auth login
+	gcloud config set project stately-magpie-451912-b8
+
+
+gcloud_deploy_hello_world_cloud_function:
+	gcloud functions deploy hello_world \
+		--runtime python311 \
+		--gen2 \
+		--trigger-http \
+		--allow-unauthenticated \
+		--source=cloud_functions/hello_world \
+		--entry-point=hello_world \
+		--region=us-central1
