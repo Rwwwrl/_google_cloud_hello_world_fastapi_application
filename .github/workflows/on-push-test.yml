@@ -20,8 +20,6 @@ jobs:
               - 'fastapi_hello_world/**'
             poetry_dependecies:
               - 'poetry.lock'
-            hello_world_cloud_function:
-              - 'cloud_functions.hello_world/**'
 
   # TODO (16.03) need to update according to different stands
   # run_tests:
@@ -34,7 +32,7 @@ jobs:
 
   deploy_to_app_engine:
     needs: run_tests
-    uses: ./.github/workflows/called-deploy_to_app_engine.yml
+    uses: ./.github/workflows/called-deploy-to-app-engine.yml
     secrets: inherit
     with:
       environment: "test"

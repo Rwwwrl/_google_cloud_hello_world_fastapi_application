@@ -27,8 +27,6 @@ class Settings(BaseSettings):
 
     FIREBASE_CONFIG: FirebaseConfig
 
-    MY_SECRET_VALUE: str
-
     @classmethod
     def settings_customise_sources(
         cls,
