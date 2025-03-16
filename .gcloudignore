@@ -183,11 +183,11 @@ cython_debug/
 .DS_Store
 
 # project specific
-# we should keep only src folder
 .pre-commit-config.yaml
 Makefile
 Readme.md
 .github
+cloud_functions
 
 # secrets
 env.toml

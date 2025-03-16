@@ -15,15 +15,10 @@ run_pytest:
 	pytest -c pytest.ini fastapi_hello_world/tests -s --disable-warnings
 
 
-# Google cloud
-deploy:
-	gcloud app deploy --quiet
 
-
-gcloud_set_up:
-	gcloud auth login
-	gcloud config set project stately-magpie-451912-b8
-
+# Test stand
+test_stand_deploy_to_app_engine:
+	gcloud app deploy --project fastapi-hello-world-test-eu --quiet
 
 gcloud_deploy_hello_world_cloud_function:
 	gcloud functions deploy hello_world \

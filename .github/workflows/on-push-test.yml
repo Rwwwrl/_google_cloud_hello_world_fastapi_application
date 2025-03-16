@@ -2,7 +2,7 @@ name: on-push-test
 
 on:
   push:
-    branches: ["main"]
+    branches: ["test**"]
 
 jobs:
   get_changes:
@@ -23,19 +23,27 @@ jobs:
             hello_world_cloud_function:
               - 'cloud_functions.hello_world/**'
 
-  run_tests:
-    if: ${{ needs.get_changes.outputs.fastapi_hello_world == 'true' || needs.get_changes.outputs.poetry_dependencies == 'true' }}
-    needs: get_changes
-    uses: ./.github/workflows/called-run-tests.yml
-    secrets: inherit
-
-  deploy_hello_world_cloud_function:
-    if: ${{ needs.get_changes.outputs.hello_world_cloud_function == 'true' }}
-    needs: get_changes
-    uses: ./.github/workflows/called-deploy_hello_world_cloud_function.yml
-    secrets: inherit
+  # TODO (16.03) need to update according to different stands
+  # run_tests:
+  #   if: ${{ needs.get_changes.outputs.fastapi_hello_world == 'true' || needs.get_changes.outputs.poetry_dependencies == 'true' }}
+  #   needs: get_changes
+  #   uses: ./.github/workflows/called-run-tests.yml
+  #   secrets: inherit
+  #   with:
+  #     environment: "test"
 
   deploy_to_app_engine:
     needs: run_tests
     uses: ./.github/workflows/called-deploy_to_app_engine.yml
     secrets: inherit
+    with:
+      environment: "test"
+
+  # TODO (16.03) need to update according to different stands
+  # deploy_before_create_user_cloud_function:
+  #   if: ${{ needs.get_changes.outputs.hello_world_cloud_function == 'true' }}
+  #   needs: get_changes
+  #   uses: ./.github/workflows/called-deploy_hello_world_cloud_function.yml
+  #   secrets: inherit
+  #   with:
+  #     environment: "test"
