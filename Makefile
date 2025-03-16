@@ -34,3 +34,24 @@ gcloud_deploy_hello_world_cloud_function:
 		--source=cloud_functions/hello_world \
 		--entry-point=hello_world \
 		--region=us-central1
+
+
+gcloud_deploy_hello_world_js_cloud_function:
+	gcloud functions deploy hello_world_js \
+		--runtime nodejs20 \
+		--no-gen2 \
+		--trigger-http \
+		--allow-unauthenticated \
+		--source=cloud_functions/hello_world_js \
+		--entry-point=hello_world_js \
+		--region=us-central1
+
+gcloud_deploy_before_create_user_cloud_function:
+	gcloud functions deploy before_create_user \
+		--runtime nodejs20 \
+		--no-gen2 \
+		--trigger-http \
+		--allow-unauthenticated \
+		--entry-point=beforeCreate \
+		--source=cloud_functions/before_create_user \
+		--region=us-central1

@@ -29,9 +29,10 @@ async def index(request: Request):
 @users_api_router.post(
     "",
     responses={
-        status.HTTP_201_CREATED: {"model": Response},
-        status.HTTP_500_INTERNAL_SERVER_ERROR: {"model": Response},
+        status.HTTP_201_CREATED: {},
+        status.HTTP_500_INTERNAL_SERVER_ERROR: {},
     },
+    include_in_schema=False,
 )
 async def create_user(payload: schemas.CreateUserPayload) -> Response:
     try:
