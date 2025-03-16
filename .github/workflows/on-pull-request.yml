@@ -1,0 +1,54 @@
+name: on-pull-request
+
+on: pull_request
+
+jobs:
+  get_changes:
+    runs-on: ubuntu-latest
+    outputs:
+      pyproject_toml: ${{ steps.changes.outputs.pyproject_toml }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: dorny/paths-filter@v3
+        id: changes
+        with:
+          filters: |
+            pyproject_toml:
+              - 'pyproject.toml'
+
+  check_if_version_were_updated:
+    needs: get_changes
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Check if pyproject.toml was updated
+        env:
+          WAS_PYPROJECT_TOML_UPDATED: ${{ needs.get_changes.outputs.pyproject_toml }}
+        run: |
+          if [[ "$WAS_PYPROJECT_TOML_UPDATED"  == 'false' ]]; then
+            echo "pyproject.toml was not updated"
+            exit 1
+          fi
+
+      - name: Get version from PR branch
+        run: |
+          HEAD_VERSION=$(grep '^version =' pyproject.toml | sed -E 's/version = "(.*)"/\1/')
+          echo $HEAD_VERSION
+          echo "HEAD_VERSION=$HEAD_VERSION" >> $GITHUB_ENV
+
+      - name: Get version from base branch
+        run: |
+          git checkout origin/${{ github.base_ref }}
+          BASE_VERSION=$(grep '^version =' pyproject.toml | sed -E 's/version = "(.*)"/\1/')
+          echo $BASE_VERSION
+          echo "BASE_VERSION=$BASE_VERSION" >> $GITHUB_ENV
+
+      - name: Compare versions
+        run: |
+          if [[ "$HEAD_VERSION" == "$BASE_VERSION" ]]; then
+            echo "Version in pyproject.toml was not updated!"
+            exit 1
+          fi
