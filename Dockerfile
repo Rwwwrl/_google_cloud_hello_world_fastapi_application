@@ -21,7 +21,7 @@ COPY pyproject.toml poetry.lock ./
 
 RUN poetry install --no-root --only main
 
-COPY src src
+COPY fastapi_hello_world fastapi_hello_world
 
 COPY env.toml env.toml
 
