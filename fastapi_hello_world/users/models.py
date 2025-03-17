@@ -1,5 +1,4 @@
 from beanie import Document
-from pydantic import Field
 from pymongo import ASCENDING, IndexModel
 
 from fastapi_hello_world.core.common.dto import DTO
@@ -7,7 +6,6 @@ from fastapi_hello_world.core.common.dto import DTO
 
 class GoogleIdentityPlatformData(DTO):
     uid: str
-    tenant_id: str | None = Field(description="note: In single-tenancy tenant_id is always None")
     email: str
 
 
@@ -18,11 +16,8 @@ class User(Document):
         name = "users"
         indexes = [
             IndexModel(
-                [
-                    ("google_identity.tenant_id", ASCENDING),
-                    ("google_identity.uid", ASCENDING),
-                ],
-                name="tenant_id__uid__unique",
+                [("google_identity.uid", ASCENDING)],
+                name="uid__unique",
                 unique=True,
             ),
         ]

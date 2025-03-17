@@ -40,7 +40,6 @@ async def create_user(payload: schemas.CreateUserPayload) -> Response:
             new_user_payload=repositories.CreateNewUserDTO(
                 google_identity=repositories.GoogleIdentityPlatformDataDTO(
                     uid=payload.uid,
-                    tenant_id=payload.tenant_id,
                     email=payload.email,
                 ),
             )

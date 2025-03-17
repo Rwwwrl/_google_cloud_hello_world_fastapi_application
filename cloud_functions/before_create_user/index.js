@@ -8,7 +8,6 @@ export async function beforeCreateHandler(user, context) {
 
   let data = {
     uid: user.uid,
-    tenant_id: user.tenantId ?? null,
     email: user.email,
   };
 
