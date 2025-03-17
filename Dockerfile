@@ -39,6 +39,8 @@ RUN poetry install --only tests
 # STAGE "prod_image"
 FROM base_image AS prod_image
 
+COPY static static
+
 # needed for google app engine (you should not change it)
 EXPOSE 8080
 
