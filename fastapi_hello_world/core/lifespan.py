@@ -10,7 +10,7 @@ from fastapi_hello_world.core.settings import settings
 async def on_startup_event(app: FastAPI) -> None:
     client = AsyncIOMotorClient(settings.MONGO_CONNECTION_STRING)
     await init_beanie(
-        database=client["db"],
+        database=client["fastapi_hello_world"],
         document_models=[
             "fastapi_hello_world.users.models.User",
         ],

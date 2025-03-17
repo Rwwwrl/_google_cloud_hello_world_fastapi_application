@@ -188,6 +188,3 @@ Makefile
 Readme.md
 .github
 cloud_functions
-
-# secrets
-env.toml
