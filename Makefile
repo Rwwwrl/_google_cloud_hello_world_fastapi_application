@@ -20,28 +20,7 @@ run_pytest:
 test_stand_deploy_to_app_engine:
 	gcloud app deploy --project fastapi-hello-world-test-eu --quiet
 
-gcloud_deploy_hello_world_cloud_function:
-	gcloud functions deploy hello_world \
-		--runtime python311 \
-		--gen2 \
-		--trigger-http \
-		--allow-unauthenticated \
-		--source=cloud_functions/hello_world \
-		--entry-point=hello_world \
-		--region=us-central1
-
-
-gcloud_deploy_hello_world_js_cloud_function:
-	gcloud functions deploy hello_world_js \
-		--runtime nodejs20 \
-		--no-gen2 \
-		--trigger-http \
-		--allow-unauthenticated \
-		--source=cloud_functions/hello_world_js \
-		--entry-point=hello_world_js \
-		--region=us-central1
-
-gcloud_deploy_before_create_user_cloud_function:
+test_stand_deploy_before_create_user_cloud_function:
 	gcloud functions deploy before_create_user \
 		--runtime nodejs20 \
 		--no-gen2 \
@@ -49,4 +28,17 @@ gcloud_deploy_before_create_user_cloud_function:
 		--allow-unauthenticated \
 		--entry-point=beforeCreate \
 		--source=cloud_functions/before_create_user \
-		--region=us-central1
+		--region=europe-central2 \
+		--project=fastapi-hello-world-test-eu
+
+test_stand_deploy_before_hello_world_js_cloud_function:
+	gcloud functions deploy hello_world_js \
+		--runtime nodejs20 \
+		--no-gen2 \
+		--trigger-http \
+		--allow-unauthenticated \
+		--entry-point=hello_world_js \
+		--source=cloud_functions/for_tests/hello_world_js \
+		--region=europe-central2 \
+		--project=fastapi-hello-world-test-eu \
+		--set-env-vars ENV_VARIABLE1=ENV_VARIABLE1_VALUE
