@@ -18,7 +18,11 @@ run_pytest:
 
 # Test stand
 test_stand_deploy_to_app_engine:
+	mv env.toml env.back.toml
+	gcloud storage cp gs://test-eu-configuration/env.toml ./
 	gcloud app deploy --project fastapi-hello-world-test-eu --quiet
+	rm env.toml
+	mv env.back.toml env.toml
 
 test_stand_deploy_before_create_user_cloud_function:
 	gcloud functions deploy before_create_user \
