@@ -14,18 +14,18 @@ jobs:
         uses: google-github-actions/auth@v2
         with:
           project_id: ${{ secrets.GCP_PROJECT_ID }}
-          credentials_json: ${{ secrets.GCP_SA_CLOUD_FUNCTIONS_KEY }}
+          credentials_json: ${{ secrets.GCP_SA_CLOUD_FUNCTIONS_DEPLOYER_KEY }}
 
       - name: Set up Google Cloud SDK
         uses: google-github-actions/setup-gcloud@v2
 
-      - name: Deploy to Google App Engine
-        run: gcloud functions deploy hello_world \
+      - name: Deploy identity-platform-beforeCreate cloud function
+        run: gcloud functions deploy identity-platform-beforeCreate \
           --runtime python311 \
-          --gen2 \
+          --no-gen2 \
           --trigger-http \
           --allow-unauthenticated \
-          --source=cloud_functions/hello_world \
-          --entry-point=hello_world \
-          --region=us-central1
-          --service-account=${{ secrets.GCP_SA_CLOUD_FUNCTIONS_EMAIL }}
+          --source=cloud_functions/google_identity_beforeCreate \
+          --entry-point=before_create \
+          --region=europe-central2
+          --service-account=${{ secrets.GCP_SA_CLOUD_FUNCTIONS_DEPLOYER_EMAIL }}
