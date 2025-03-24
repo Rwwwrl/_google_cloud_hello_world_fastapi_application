@@ -6,8 +6,7 @@ from fastapi_hello_world.users import models
 
 class GoogleIdentityPlatformDataDTO(DTO):
     uid: str
-    tenant_id: str
-    email: str | None
+    email: str
 
 
 class CreateNewUserDTO(DTO):
@@ -25,12 +24,11 @@ class UserRepository:
     async def create_new_user(
         cls,
         new_user_payload: CreateNewUserDTO,
-        session: AsyncIOMotorClientSession,
+        session: AsyncIOMotorClientSession | None = None,
     ) -> models.User:
         new_user = models.User(
             google_identity=models.GoogleIdentityPlatformData(
                 uid=new_user_payload.google_identity.uid,
-                tenant_id=new_user_payload.google_identity.tenant_id,
                 email=new_user_payload.google_identity.email,
             )
         )

@@ -31,7 +31,7 @@ jobs:
   #     environment: "test"
 
   deploy_to_app_engine:
-    needs: run_tests
+    # needs: run_tests
     uses: ./.github/workflows/called-deploy-to-app-engine.yml
     secrets: inherit
     with:
