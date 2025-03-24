@@ -2,6 +2,8 @@ import gcipCloudFunctions from "gcip-cloud-functions";
 
 const authClient = new gcipCloudFunctions.Auth();
 
+const CREATE_USERS_API_ENDPOINT = process.env.CREATE_USERS_API_ENDPOINT;
+
 export async function beforeCreateHandler(user, context) {
   // TODO: move it to env
   const url = "https://fastapi-hello-world-test-eu.lm.r.appspot.com/api/users";
