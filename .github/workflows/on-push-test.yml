@@ -8,8 +8,9 @@ jobs:
   get_changes:
     runs-on: ubuntu-latest
     outputs:
-      src: ${{ steps.changes.outputs.src }}
+      fastapi_hello_world: ${{ steps.changes.outputs.fastapi_hello_world }}
       poetry_dependecies: ${{ steps.changes.outputs.dependency_versions }}
+      identity-platformat-beforeCreate: ${{ steps.changes.outputs.identity-platformat-beforeCreate }}
     steps:
       - uses: actions/checkout@v4
       - uses: dorny/paths-filter@v3
@@ -18,10 +19,12 @@ jobs:
           filters: |
             fastapi_hello_world:
               - 'fastapi_hello_world/**'
+            identity-platformat-beforeCreate:
+              - 'cloud_functions/google_identity_beforeCreate/**'
             poetry_dependecies:
               - 'poetry.lock'
 
-  # TODO (16.03) need to update according to different stands
+  # TODO
   # run_tests:
   #   if: ${{ needs.get_changes.outputs.fastapi_hello_world == 'true' || needs.get_changes.outputs.poetry_dependencies == 'true' }}
   #   needs: get_changes
@@ -32,16 +35,16 @@ jobs:
 
   deploy_to_app_engine:
     # needs: run_tests
+    if: ${{ needs.get_changes.outputs.fastapi_hello_world == 'true' || needs.get_changes.outputs.poetry_dependencies == 'true' }}
     uses: ./.github/workflows/called-deploy-to-app-engine.yml
     secrets: inherit
     with:
       environment: "test"
 
-  # TODO (16.03) need to update according to different stands
-  # deploy_before_create_user_cloud_function:
-  #   if: ${{ needs.get_changes.outputs.hello_world_cloud_function == 'true' }}
-  #   needs: get_changes
-  #   uses: ./.github/workflows/called-deploy_hello_world_cloud_function.yml
-  #   secrets: inherit
-  #   with:
-  #     environment: "test"
+  deploy_before_create_user_cloud_function:
+    if: ${{ needs.get_changes.outputs.hello_world_cloud_function == 'true' }}
+    needs: get_changes
+    uses: ./.github/workflows/called-deploy-beforeCreate-cloud-function.yml
+    secrets: inherit
+    with:
+      environment: "test"
