@@ -24,14 +24,6 @@ jobs:
             poetry_dependecies:
               - 'poetry.lock'
 
-  # TODO
-  # run_tests:
-  #   if: ${{ needs.get_changes.outputs.fastapi_hello_world == 'true' || needs.get_changes.outputs.poetry_dependencies == 'true' }}
-  #   needs: get_changes
-  #   uses: ./.github/workflows/called-run-tests.yml
-  #   secrets: inherit
-  #   with:
-  #     environment: "test"
 
   deploy_to_app_engine:
     # needs: run_tests
