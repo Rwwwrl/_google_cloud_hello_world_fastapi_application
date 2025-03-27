@@ -1,10 +1,16 @@
 name: called-run-tests
 
-on: workflow_call
+on:
+  workflow_call:
+    inputs:
+      environment:
+        required: true
+        type: string
 
 jobs:
   run_tests:
     runs-on: ubuntu-latest
+    environment: ${{ inputs.environment }}
 
     services:
       mongodb:
@@ -29,7 +35,7 @@ jobs:
         uses: google-github-actions/auth@v2
         with:
           project_id: ${{ secrets.GCP_PROJECT_ID }}
-          credentials_json: ${{ secrets.GCP_SA_KEY }}
+          credentials_json: ${{ secrets.GCP_OBJECT_VIEWER_SA_KEY }}
 
       - name: Set up Google Cloud SDK
         uses: google-github-actions/setup-gcloud@v2

@@ -6,6 +6,8 @@ jobs:
   get_changes:
     runs-on: ubuntu-latest
     outputs:
+      fastapi_hello_world: ${{ steps.changes.outputs.fastapi_hello_world }}
+      poetry_dependecies: ${{ steps.changes.outputs.dependency_versions }}
       pyproject_toml: ${{ steps.changes.outputs.pyproject_toml }}
     steps:
       - uses: actions/checkout@v4
@@ -13,6 +15,10 @@ jobs:
         id: changes
         with:
           filters: |
+            fastapi_hello_world:
+              - 'fastapi_hello_world/**'
+            poetry_dependecies:
+              - 'poetry.lock'
             pyproject_toml:
               - 'pyproject.toml'
 
@@ -52,3 +58,11 @@ jobs:
             echo "Version in pyproject.toml was not updated!"
             exit 1
           fi
+
+  run_tests:
+    if: needs.get_changes.outputs.fastapi_hello_world == 'true' || needs.get_changes.outputs.poetry_dependencies == 'true'
+    needs: get_changes
+    uses: ./.github/workflows/called-run-tests.yml
+    secrets: inherit
+    with:
+      environment: "github-actions-running-tests"
