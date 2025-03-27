@@ -19,7 +19,7 @@ jobs:
       - name: Authenticate with Google Cloud
         uses: google-github-actions/auth@v2
         with:
-          project_id: ${{ secrets.GCP_PROJECT_ID }}
+          project_id: ${{ vars.GCP_PROJECT_ID }}
           credentials_json: ${{ secrets.GCP_SA_CLOUD_FUNCTIONS_DEPLOYER_KEY }}
 
       - name: Set up Google Cloud SDK
@@ -32,12 +32,12 @@ jobs:
       - name: Deploy identity-platform-beforeCreate cloud function
         run: |
           gcloud functions deploy identity-platform-beforeCreate \
-            --runtime python311 \
+            --runtime nodejs20 \
             --no-gen2 \
             --trigger-http \
             --allow-unauthenticated \
             --source=cloud_functions/google_identity_beforeCreate \
-            --entry-point=before_create \
+            --entry-point=beforeCreate \
             --region=europe-central2 \
-            --service-account=${{ secrets.GCP_SA_CLOUD_FUNCTIONS_DEPLOYER_EMAIL }} \
+            --service-account=${{ vars.GCP_SA_CLOUD_FUNCTIONS_DEPLOYER_EMAIL }} \
             --env-vars-file=config.yaml
