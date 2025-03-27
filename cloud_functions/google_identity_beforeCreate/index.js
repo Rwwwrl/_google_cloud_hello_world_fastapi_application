@@ -5,27 +5,21 @@ const authClient = new gcipCloudFunctions.Auth();
 const CREATE_USERS_API_ENDPOINT = process.env.CREATE_USERS_API_ENDPOINT;
 
 export async function beforeCreateHandler(user, context) {
-  // TODO: move it to env
-  const url = "https://fastapi-hello-world-test-eu.lm.r.appspot.com/api/users";
-
-  let data = {
+  let body = {
     uid: user.uid,
     email: user.email,
   };
 
-  let res = await fetch(url, {
+  let res = await fetch(CREATE_USERS_API_ENDPOINT, {
     method: "POST",
-    body: JSON.stringify(data),
+    body: JSON.stringify(body),
     headers: {
       "Content-Type": "application/json",
     },
   });
 
   if (res.status !== 201) {
-    response_json = await res.json();
-    console.error(
-      `error during fetch fastapi-backend, res.status = ${res.status}, res.response = ${response_json}`
-    );
+    console.error(`error during fetch fastapi-backend, res.status = ${res.status}`);
     throw new gcipCloudFunctions.https.HttpsError(
       "internal",
       "Failed to create user."
