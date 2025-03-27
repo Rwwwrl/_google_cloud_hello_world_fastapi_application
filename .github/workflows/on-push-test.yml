@@ -2,7 +2,7 @@ name: on-push-test
 
 on:
   push:
-    branches: ["test**"]
+    branches: ["test/*"]
 
 jobs:
   get_changes:
@@ -24,17 +24,15 @@ jobs:
             poetry_dependecies:
               - 'poetry.lock'
 
-
   deploy_to_app_engine:
-    # needs: run_tests
-    if: ${{ needs.get_changes.outputs.fastapi_hello_world == 'true' || needs.get_changes.outputs.poetry_dependencies == 'true' }}
+    if: needs.get_changes.outputs.fastapi_hello_world == 'true' || needs.get_changes.outputs.poetry_dependencies == 'true'
     uses: ./.github/workflows/called-deploy-to-app-engine.yml
     secrets: inherit
     with:
       environment: "test"
 
   deploy_before_create_user_cloud_function:
-    if: ${{ needs.get_changes.outputs.hello_world_cloud_function == 'true' }}
+    if: needs.get_changes.outputs.hello_world_cloud_function == 'true'
     needs: get_changes
     uses: ./.github/workflows/called-deploy-beforeCreate-cloud-function.yml
     secrets: inherit

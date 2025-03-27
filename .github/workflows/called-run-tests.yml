@@ -1,10 +1,16 @@
 name: called-run-tests
 
-on: workflow_call
+on:
+  workflow_call:
+    inputs:
+      environment:
+        required: true
+        type: string
 
 jobs:
   run_tests:
     runs-on: ubuntu-latest
+    environment: ${{ inputs.environment }}
 
     services:
       mongodb:
