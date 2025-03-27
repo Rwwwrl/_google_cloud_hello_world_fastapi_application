@@ -30,13 +30,14 @@ jobs:
           gcloud storage cp ${{ vars.GCP_STORAGE_BEFORECREATE_CONFIG_YAML_PATH }} ./
 
       - name: Deploy identity-platform-beforeCreate cloud function
-        run: gcloud functions deploy identity-platform-beforeCreate \
-          --runtime python311 \
-          --no-gen2 \
-          --trigger-http \
-          --allow-unauthenticated \
-          --source=cloud_functions/google_identity_beforeCreate \
-          --entry-point=before_create \
-          --region=europe-central2 \
-          --service-account=${{ secrets.GCP_SA_CLOUD_FUNCTIONS_DEPLOYER_EMAIL }} \
-          --env-vars-file=config.yaml
+        run: |
+          gcloud functions deploy identity-platform-beforeCreate \
+            --runtime python311 \
+            --no-gen2 \
+            --trigger-http \
+            --allow-unauthenticated \
+            --source=cloud_functions/google_identity_beforeCreate \
+            --entry-point=before_create \
+            --region=europe-central2 \
+            --service-account=${{ secrets.GCP_SA_CLOUD_FUNCTIONS_DEPLOYER_EMAIL }} \
+            --env-vars-file=config.yaml
