@@ -5,7 +5,7 @@ from pydantic_settings import (
     BaseSettings,
     PydanticBaseSettingsSource,
     SettingsConfigDict,
-    TomlConfigSettingsSource,
+    YamlConfigSettingsSource,
 )
 
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -18,7 +18,7 @@ class FirebaseConfig(BaseModel):
 
 class Settings(BaseSettings):
     model_config = SettingsConfigDict(
-        toml_file="env.toml",
+        toml_file="env.yaml",
         env_ignore_empty=False,
         extra="ignore",
     )
@@ -26,6 +26,8 @@ class Settings(BaseSettings):
     MONGO_CONNECTION_STRING: str
 
     FIREBASE_CONFIG: FirebaseConfig
+
+    AUDIENCE: str
 
     @classmethod
     def settings_customise_sources(
@@ -37,7 +39,7 @@ class Settings(BaseSettings):
         file_secret_settings: PydanticBaseSettingsSource,
     ) -> tuple[PydanticBaseSettingsSource, ...]:
         return (
-            TomlConfigSettingsSource(settings_cls),
+            YamlConfigSettingsSource(settings_cls),
             init_settings,
             env_settings,
             dotenv_settings,
