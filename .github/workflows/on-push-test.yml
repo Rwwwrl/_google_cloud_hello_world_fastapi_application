@@ -3,6 +3,7 @@ name: on-push-test
 on:
   push:
     branches: ["test/*"]
+  workflow_dispatch:
 
 jobs:
   deploy_to_app_engine:
@@ -11,8 +12,8 @@ jobs:
     with:
       environment: "test"
 
-  deploy_before_create_user_cloud_function:
-    uses: ./.github/workflows/called-deploy-beforeCreate-cloud-function.yml
-    secrets: inherit
-    with:
-      environment: "test"
+  # deploy_before_create_user_cloud_function:
+  #   uses: ./.github/workflows/called-deploy-beforeCreate-cloud-function.yml
+  #   secrets: inherit
+  #   with:
+  #     environment: "test"

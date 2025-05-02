@@ -1,7 +1,7 @@
 # BASE STAGE
 FROM python:3.11 AS base_image
 
-ENV POETRY_VERSION=1.8.2 \
+ENV POETRY_VERSION=1.8.3 \
     POETRY_VIRTUALENVS_IN_PROJECT=true \
     POETRY_NO_INTERACTION=1 \
     PYTHONUNBUFFERED=1
@@ -21,9 +21,9 @@ COPY pyproject.toml poetry.lock ./
 
 RUN poetry install --no-root --only main
 
-COPY fastapi_hello_world fastapi_hello_world
-
-COPY env.toml env.toml
+COPY static static
+COPY app app
+COPY env.yaml env.yaml
 
 
 
@@ -34,14 +34,14 @@ COPY pytest.ini pytest.ini
 
 RUN poetry install --only tests
 
+CMD ["poetry", "run", "pytest", "-c", "pytest.ini", "app", "--disable-warnings"]
+
 
 
 # STAGE "prod_image"
 FROM base_image AS prod_image
 
-COPY static static
-
 # needed for google app engine (you should not change it)
 EXPOSE 8080
 
-CMD ["poetry", "run", "uvicorn", "fastapi_hello_world.app:app", "--host", "0.0.0.0", "--port", "8080"]
+CMD ["poetry", "run", "uvicorn", "app.api.app:app", "--host", "0.0.0.0", "--port", "8080"]

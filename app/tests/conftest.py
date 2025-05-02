@@ -4,9 +4,9 @@ import pytest_asyncio
 from beanie import init_beanie
 from motor.motor_asyncio import AsyncIOMotorClient
 
-from fastapi_hello_world.app import app
-from fastapi_hello_world.core.settings import settings
-from fastapi_hello_world.users.models import User
+from app.api.app import app
+from app.api.users.documents import User
+from app.core.settings import settings
 
 
 @pytest_asyncio.fixture(scope="session")
@@ -14,8 +14,7 @@ async def mongodb_client():
     """
     Set up a test database for the session.
     """
-    # Use a test database URI
-    test_db_uri = settings.MONGO_CONNECTION_STRING
+    test_db_uri = settings.MONGO_DB_CONFIG.uri
     client = AsyncIOMotorClient(test_db_uri)
     client.get_io_loop = asyncio.get_event_loop
     database_name = "test"
@@ -39,7 +38,6 @@ async def mongodb_client():
 async def clear_collections(mongodb_client):
     """
     Clear all collections before each test.
-    Don't clear pre-populated collections from migrations: capture_tasks, health_areas, biomarkers
     """
     for model in [User]:
         await model.get_motor_collection().delete_many({})

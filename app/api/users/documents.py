@@ -1,17 +1,10 @@
 from beanie import Document
 from pymongo import ASCENDING, IndexModel
 
-from fastapi_hello_world.core.common.dto import DTO
-
-
-class GoogleIdentityPlatformData(DTO):
-    uid: str
-    email: str
+from app.api.users.schemas import nested_models
 
 
 class User(Document):
-    google_identity: GoogleIdentityPlatformData
-
     class Settings:
         name = "users"
         indexes = [
@@ -21,3 +14,5 @@ class User(Document):
                 unique=True,
             ),
         ]
+
+    google_identity: nested_models.GCloudIdentityPlatformDataDTO

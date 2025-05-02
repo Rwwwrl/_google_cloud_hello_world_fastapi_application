@@ -16,18 +16,21 @@ class FirebaseConfig(BaseModel):
     auth_domain: str
 
 
+class MongoDBConfig(BaseModel):
+    uri: str
+    db_name: str
+
+
 class Settings(BaseSettings):
     model_config = SettingsConfigDict(
-        toml_file="env.yaml",
+        yaml_file="env.yaml",
         env_ignore_empty=False,
         extra="ignore",
     )
 
-    MONGO_CONNECTION_STRING: str
+    MONGO_DB_CONFIG: MongoDBConfig
 
     FIREBASE_CONFIG: FirebaseConfig
-
-    AUDIENCE: str
 
     @classmethod
     def settings_customise_sources(
