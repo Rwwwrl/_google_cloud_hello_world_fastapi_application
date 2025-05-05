@@ -12,21 +12,21 @@ jobs:
     runs-on: ubuntu-latest
     environment: ${{ inputs.environment }}
 
-    services:
-      mongodb:
-        image: mongo:latest
-        ports:
-          - 27017:27017
-
     steps:
-      - name: Wait for MongoDB to be ready
+      - name: Create a Docker Network
+        run: docker network create my-network
+
+      - name: Start mongodb
         run: |
-          for i in {1..30}; do
-            nc -z localhost 27017 && echo "MongoDB is ready" && exit 0
-            echo "Waiting for MongoDB..."
-            sleep 2
-          done
-          echo "MongoDB did not become ready in time" && exit 1
+          docker run --rm -d --name mongodb --network=my-network -p 27017:27017 mongo:latest --bind_ip_all --replSet rs0
+          sleep 5
+          docker exec mongodb mongosh --eval "
+            rs.initiate({
+              _id: 'rs0',
+              members: [{ _id: 0, host: 'mongodb:27017' }]
+            });
+          "
+          echo "Replica set initialized."
 
       - name: Checkout repository
         uses: actions/checkout@v4
@@ -34,14 +34,14 @@ jobs:
       - name: Authenticate with Google Cloud
         uses: google-github-actions/auth@v2
         with:
-          project_id: ${{ secrets.GCP_PROJECT_ID }}
+          project_id: ${{ vars.GCP_PROJECT_ID }}
           credentials_json: ${{ secrets.GCP_OBJECT_VIEWER_SA_KEY }}
 
       - name: Set up Google Cloud SDK
         uses: google-github-actions/setup-gcloud@v2
 
-      - name: Download env.toml file
-        run: gcloud storage cp ${{ vars.GCP_GITHUB_ACTIONS_ENV_TOML_PATH }} ./
+      - name: Download env.yaml file
+        run: gcloud storage cp ${{ vars.GCP_GITHUB_ACTIONS_ENV_YAML_PATH }} .
 
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
@@ -53,12 +53,19 @@ jobs:
           push: false
           context: .
           target: image_for_running_tests_in_github_actions
-          tags: app:image_for_running_tests_in_github_actions
+          tags: fastapi-hello-world-app:tests
           cache-from: type=gha
           cache-to: type=gha,mode=max
 
       - name: Run tests
         uses: addnab/docker-run-action@v3
         with:
-          image: app:image_for_running_tests_in_github_actions
-          run: poetry run pytest src/tests/ -c pytest.ini
+          image: fastapi-hello-world-app:tests
+          run: poetry run pytest app -c pytest.ini
+          docker_network: my-network
+
+      - name: Teardown
+        if: always()
+        run: |
+          docker stop mongodb
+          docker network rm my-network

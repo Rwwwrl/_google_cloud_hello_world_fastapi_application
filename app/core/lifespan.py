@@ -4,17 +4,20 @@ from beanie import init_beanie
 from fastapi import FastAPI
 from motor.motor_asyncio import AsyncIOMotorClient
 
-from fastapi_hello_world.core.settings import settings
+from app.core.settings import settings
 
 
 async def on_startup_event(app: FastAPI) -> None:
-    client = AsyncIOMotorClient(settings.MONGO_CONNECTION_STRING)
+    client = AsyncIOMotorClient(settings.MONGO_DB_CONFIG.uri)
+    database = client[settings.MONGO_DB_CONFIG.db_name]
     await init_beanie(
-        database=client["fastapi_hello_world"],
+        database=database,
         document_models=[
-            "fastapi_hello_world.users.models.User",
+            "app.api.users.documents.User",
         ],
     )
+
+    app.state.mongodb_database = database
 
 
 async def on_shutdown_event(app: FastAPI) -> None:

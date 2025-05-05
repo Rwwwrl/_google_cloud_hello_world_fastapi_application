@@ -3,18 +3,19 @@ import logging
 from fastapi import APIRouter, Request, Response, status
 from fastapi.templating import Jinja2Templates
 
-from fastapi_hello_world.core.settings import BASE_DIR, settings
-from fastapi_hello_world.users import repositories, schemas
+from app.api.users.repositories import UserRepository
+from app.api.users.schemas import dtos, request_schemas
+from app.core.settings import BASE_DIR, settings
 
 users_api_router = APIRouter(tags=["users"])
 
-templates = Jinja2Templates(directory=BASE_DIR / "users" / "templates")
+templates = Jinja2Templates(directory=BASE_DIR / "api" / "users" / "templates")
 
 
 logger = logging.getLogger(__name__)
 
 
-@users_api_router.get("")
+@users_api_router.get("/")
 async def index(request: Request):
     return templates.TemplateResponse(
         request=request,
@@ -27,28 +28,25 @@ async def index(request: Request):
 
 
 @users_api_router.post(
-    "",
+    "/",
     responses={
         status.HTTP_201_CREATED: {},
         status.HTTP_500_INTERNAL_SERVER_ERROR: {},
     },
     include_in_schema=False,
 )
-async def create_user(payload: schemas.CreateUserPayload) -> Response:
+async def create_user_gcloud_fallback(payload: request_schemas.CreateUserPayload) -> Response:
     try:
-        await repositories.UserRepository.create_new_user(
-            new_user_payload=repositories.CreateNewUserDTO(
-                google_identity=repositories.GoogleIdentityPlatformDataDTO(
+        await UserRepository.create_new_user(
+            new_user_payload=dtos.CreateNewUserDTO(
+                google_identity=dtos.GCloudIdentityPlatformDataDTO(
                     uid=payload.uid,
                     email=payload.email,
                 ),
             )
         )
-    except repositories.ExceptionDuringWriting:
+    except Exception:
         logger.exception()
-        return Response(
-            content="exception during saving new user",
-            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
-        )
+        return Response(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
     return Response(status_code=status.HTTP_201_CREATED)

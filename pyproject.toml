@@ -1,8 +1,9 @@
 [tool.poetry]
-name = "fastapi_hello_world"
-version = "0.3.2"
+name = "fastapi-hello-world"
+version = "0.4.0"
 description = ""
 authors = ["Aleksei Sosov <forgithublesh@yandex.ru>"]
+package-mode = false
 
 [build-system]
 requires = ["poetry-core"]
@@ -20,7 +21,7 @@ black = "^23.0.0"
 ruff = "^0.9.6"
 isort = "^5.13.1"
 pre-commit = "^4.1.0"
-
+ipython = "^9.2.0"
 
 [tool.poetry.group.tests.dependencies]
 pytest = "^8.3.4"

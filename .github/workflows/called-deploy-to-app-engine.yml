@@ -19,14 +19,14 @@ jobs:
       - name: Authenticate with Google Cloud
         uses: google-github-actions/auth@v2
         with:
-          project_id: ${{ secrets.GCP_PROJECT_ID }}
+          project_id: ${{ vars.GCP_PROJECT_ID }}
           credentials_json: ${{ secrets.GCP_SA_GITHUB_ACTIONS_APP_ENGINE_DEPLOYER_KEY }}
 
       - name: Set up Google Cloud SDK
         uses: google-github-actions/setup-gcloud@v2
 
-      - name: Download env.toml file
-        run: gcloud storage cp ${{ vars.GCP_STORAGE_CONFIG_ENV_TOML_PATH }} ./
+      - name: Download env.yaml file
+        run: gcloud storage cp ${{ vars.GCP_STORAGE_CONFIG_ENV_YAML_PATH }} ./
 
       - name: Deploy to Google App Engine
-        run: gcloud app deploy --service-account=${{ secrets.GCP_SA_GITHUB_ACTIONS_APP_ENGINE_DEPLOYER_EMAIL }}
+        run: gcloud app deploy --service-account=${{ vars.GCP_SA_GITHUB_ACTIONS_APP_ENGINE_DEPLOYER_EMAIL }}

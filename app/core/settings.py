@@ -5,7 +5,7 @@ from pydantic_settings import (
     BaseSettings,
     PydanticBaseSettingsSource,
     SettingsConfigDict,
-    TomlConfigSettingsSource,
+    YamlConfigSettingsSource,
 )
 
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -16,14 +16,19 @@ class FirebaseConfig(BaseModel):
     auth_domain: str
 
 
+class MongoDBConfig(BaseModel):
+    uri: str
+    db_name: str
+
+
 class Settings(BaseSettings):
     model_config = SettingsConfigDict(
-        toml_file="env.toml",
+        yaml_file="env.yaml",
         env_ignore_empty=False,
         extra="ignore",
     )
 
-    MONGO_CONNECTION_STRING: str
+    MONGO_DB_CONFIG: MongoDBConfig
 
     FIREBASE_CONFIG: FirebaseConfig
 
@@ -37,7 +42,7 @@ class Settings(BaseSettings):
         file_secret_settings: PydanticBaseSettingsSource,
     ) -> tuple[PydanticBaseSettingsSource, ...]:
         return (
-            TomlConfigSettingsSource(settings_cls),
+            YamlConfigSettingsSource(settings_cls),
             init_settings,
             env_settings,
             dotenv_settings,
