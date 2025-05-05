@@ -25,7 +25,7 @@ jobs:
       - name: Set up Google Cloud SDK
         uses: google-github-actions/setup-gcloud@v2
 
-      - name: Download env.toml file
+      - name: Download env.yaml file
         run: gcloud storage cp ${{ vars.GCP_STORAGE_CONFIG_ENV_YAML_PATH }} ./
 
       - name: Deploy to Google App Engine

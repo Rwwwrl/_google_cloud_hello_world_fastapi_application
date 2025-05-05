@@ -40,8 +40,8 @@ jobs:
       - name: Set up Google Cloud SDK
         uses: google-github-actions/setup-gcloud@v2
 
-      - name: Download env.toml file
-        run: gcloud storage cp ${{ vars.GCP_GITHUB_ACTIONS_ENV_TOML_PATH }} ./
+      - name: Download env.yaml file
+        run: gcloud storage cp ${{ vars.GCP_GITHUB_ACTIONS_ENV_YAML_PATH }} .
 
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
