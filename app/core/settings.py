@@ -30,6 +30,8 @@ class Settings(BaseSettings):
 
     MONGO_DB_CONFIG: MongoDBConfig
 
+    AUDIENCE: str
+
     FIREBASE_CONFIG: FirebaseConfig
 
     @classmethod

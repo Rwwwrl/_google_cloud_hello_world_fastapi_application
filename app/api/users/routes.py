@@ -1,10 +1,11 @@
 import logging
 
-from fastapi import APIRouter, Request, Response, status
+from fastapi import APIRouter, Depends, Request, Response, status
 from fastapi.templating import Jinja2Templates
 
 from app.api.users.repositories import UserRepository
 from app.api.users.schemas import dtos, request_schemas
+from app.core.dependecies.verify_google_signed_id_token import _get_google_signed_id_token_from_header
 from app.core.settings import BASE_DIR, settings
 
 users_api_router = APIRouter(tags=["users"])
@@ -13,6 +14,12 @@ templates = Jinja2Templates(directory=BASE_DIR / "api" / "users" / "templates")
 
 
 logger = logging.getLogger(__name__)
+
+
+@users_api_router.post("/ping/")
+async def hello_world(token: str = Depends(_get_google_signed_id_token_from_header)):
+    print(token)
+    return Response(status_code=200)
 
 
 @users_api_router.get("/")
