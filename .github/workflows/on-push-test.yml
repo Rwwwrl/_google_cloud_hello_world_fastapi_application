@@ -12,8 +12,8 @@ jobs:
     with:
       environment: "test"
 
-  # deploy_before_create_user_cloud_function:
-  #   uses: ./.github/workflows/called-deploy-beforeCreate-cloud-function.yml
-  #   secrets: inherit
-  #   with:
-  #     environment: "test"
+  deploy_before_create_user_cloud_function:
+    uses: ./.github/workflows/called-deploy-testing_m2m_via_google_signed_id_token-cloud-function.yml
+    secrets: inherit
+    with:
+      environment: "test"
