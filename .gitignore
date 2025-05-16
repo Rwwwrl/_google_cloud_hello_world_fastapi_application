@@ -169,3 +169,8 @@ cython_debug/
 
 # secrets
 env.toml
+
+
+# cloud functions specifics
+cloud_functions/**/key.json
+cloud_functions/**/config.yaml

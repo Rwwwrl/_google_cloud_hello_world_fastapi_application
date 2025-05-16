@@ -1,0 +1,9 @@
+{
+  "name": "testing_m2m_via_google_signed_id_token",
+  "version": "0.0.1",
+  "main": "index.js",
+  "dependencies": {
+    "@google-cloud/functions-framework": "^2.0.0",
+    "google-auth-library": "^9.15.1"
+  }
+}
