@@ -172,6 +172,5 @@ env.toml
 
 
 # cloud functions specifics
-cloud_functions/**/deploy.sh
-cloud_functions/**/keys.json
+cloud_functions/**/key.json
 cloud_functions/**/config.yaml

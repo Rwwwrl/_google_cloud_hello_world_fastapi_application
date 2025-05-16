@@ -1,18 +1,15 @@
 const functions = require("@google-cloud/functions-framework");
-const { JWT } = require("google-auth-library");
-
-const keys = require("./keys.json");
-// m2m-cloud-function-to-backend service account keys
+const { GoogleAuth } = require("google-auth-library");
 
 const AUDIENCE = process.env.AUDIENCE;
-
 const BACKEND_API_HOST = process.env.BACKEND_API_HOST;
 
+const auth = new GoogleAuth({
+    keyFile: "key.json",
+});
+
 functions.http("testingM2MViaGoogleSignedIdToken", async (req, res) => {
-    const client = new JWT({
-        email: keys.client_email,
-        key: keys.private_key,
-    });
+    const client = await auth.getClient();
 
     const googleSignedIdToken = await client.fetchIdToken(AUDIENCE);
 
