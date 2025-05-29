@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Google Redirect Login</title>
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      href="{{ url_for('static', path='/api/users/index.css') }}"
+    />
+    <script src="https://www.gstatic.com/firebasejs/8.0/firebase.js"></script>
+  </head>
+  <body>
+    <div class="container">
+      <h2 class="header-google-sign-in-with-redirect">
+        Google Sign-In with Redirect
+      </h2>
+      <button type="button" class="btn btn-primary" id="google-login-btn">
+        Login with Google
+      </button>
+
+      <div id="recaptcha-container"></div>
+
+      <script>
+        var config = {
+          apiKey: "{{ api_key }}",
+          authDomain: "{{ auth_domain }}",
+        };
+        firebase.initializeApp(config);
+        const auth = firebase.auth();
+        auth.tenantId = "insurance-company-6amwq";
+
+        const provider = new firebase.auth.GoogleAuthProvider();
+
+        const phoneAuthProvider = new firebase.auth.PhoneAuthProvider(auth);
+
+        const recaptchaVerifier = new firebase.auth.RecaptchaVerifier(
+          "recaptcha-container",
+          { size: "invisible" }
+        );
+
+        async function googleSignIn() {
+          try {
+            const result = await auth.signInWithPopup(provider);
+            const user = result.user;
+
+            // Get the fresh ID token
+            const idToken = await user.getIdToken();
+            console.log("ID token:", idToken);
+
+            if (result.additionalUserInfo.isNewUser) {
+              // FIRST-TIME: enroll their phone as a second factor
+              await enrollPhoneMfa(user);
+            } else {
+              console.log("Existing user — fully signed in");
+            }
+          } catch (error) {
+            // 4) If they have MFA enrolled, you'll get this error on sign-in
+            if (error.code === "auth/multi-factor-auth-required") {
+              await handleMfaSignIn(error.resolver);
+            } else {
+              console.error("Sign-in error:", error);
+            }
+          }
+        }
+
+        async function enrollPhoneMfa(user) {
+          // a) Start a second-factor session
+          const mfaSession = await user.multiFactor.getSession();
+
+          // b) Ask them for their phone number
+          const phoneNumber = window.prompt(
+            "Enter your phone number (e.g. +15551234567):"
+          );
+          const phoneOptions = {
+            phoneNumber,
+            multiFactorSession: mfaSession,
+          };
+
+          // c) Send the SMS
+          const verificationId = await phoneAuthProvider.verifyPhoneNumber(
+            phoneOptions,
+            recaptchaVerifier
+          );
+
+          // d) Prompt for the code
+          const verificationCode = window.prompt(
+            "Enter the SMS verification code:"
+          );
+
+          // e) Build the MFA assertion and enroll
+          const cred = firebase.auth.PhoneAuthProvider.credential(
+            verificationId,
+            verificationCode
+          );
+          const assertion =
+            firebase.auth.PhoneMultiFactorGenerator.assertion(cred);
+          await user.multiFactor.enroll(assertion, "Phone #" + phoneNumber);
+          console.log("✅ Phone enrolled for MFA");
+        }
+
+        async function handleMfaSignIn(resolver) {
+          // Pick the first enrolled phone factor
+          const hint = resolver.hints.find(
+            (h) =>
+              h.factorId === firebase.auth.PhoneMultiFactorGenerator.FACTOR_ID
+          );
+          if (!hint) {
+            throw new Error("No phone factor found");
+          }
+
+          // Send the SMS
+          const verificationId = phoneAuthProvider.verifyPhoneNumber(
+            {
+              multiFactorHint: hint,
+              multiFactorSession: resolver.session,
+            },
+            recaptchaVerifier
+          );
+
+          // Prompt for the code
+          const verificationCode = window.prompt(
+            "Enter the SMS code sent to " + hint.phoneNumber + ":"
+          );
+
+          // Build the MFA assertion and complete sign-in
+          const cred = firebase.auth.PhoneAuthProvider.credential(
+            verificationId,
+            verificationCode
+          );
+          const assertion =
+            firebase.auth.PhoneMultiFactorGenerator.assertion(cred);
+          const userCredential = await resolver.resolveSignIn(assertion);
+          console.log("✅ MFA sign-in complete:", userCredential.user.uid);
+        }
+
+        document
+          .getElementById("google-login-btn")
+          .addEventListener("click", () => {
+            googleSignIn();
+          });
+      </script>
+    </div>
+  </body>
+</html>
