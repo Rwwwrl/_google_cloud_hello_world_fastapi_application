@@ -1720,6 +1720,23 @@ docs = ["furo (>=2023.7.26)", "proselint (>=0.13)", "sphinx (>=7.1.2,!=7.3)", "s
 test = ["covdefaults (>=2.3)", "coverage (>=7.2.7)", "coverage-enable-subprocess (>=1)", "flaky (>=3.7)", "packaging (>=23.1)", "pytest (>=7.4)", "pytest-env (>=0.8.2)", "pytest-freezer (>=0.4.8)", "pytest-mock (>=3.11.1)", "pytest-randomly (>=3.12)", "pytest-timeout (>=2.1)", "setuptools (>=68)", "time-machine (>=2.10)"]
 
 [[package]]
+name = "vital"
+version = "2.1.442"
+description = ""
+optional = false
+python-versions = "<4.0,>=3.8"
+files = [
+    {file = "vital-2.1.442-py3-none-any.whl", hash = "sha256:070c73035b5f82984e26643016ef2f056b43cc3fcabb482cba8e87381aca028b"},
+    {file = "vital-2.1.442.tar.gz", hash = "sha256:3dfb165bbb7b28fca9a4d5a25a27b49a37b3df6555cacdc8e77f302b14e0a3f0"},
+]
+
+[package.dependencies]
+httpx = ">=0.21.2"
+pydantic = ">=1.9.2"
+pydantic-core = ">=2.18.2,<3.0.0"
+typing_extensions = ">=4.0.0"
+
+[[package]]
 name = "watchfiles"
 version = "1.0.4"
 description = "Simple, modern and high performance file watching and code reload in python."
@@ -1894,4 +1911,4 @@ files = [
 [metadata]
 lock-version = "2.0"
 python-versions = "^3.11.8"
-content-hash = "2e782d8f1b9b26e5a0ff43d0647151183b450504942a259e3d1bb960bb43b3a8"
+content-hash = "8063b8c4cc3f43006b2fd48c57c5f27d0241c911a62b44662d995873f1118761"

@@ -13,6 +13,13 @@ class User(Document):
                 name="uid__unique",
                 unique=True,
             ),
+            IndexModel(
+                [("id_in_vital", ASCENDING)],
+                name="id_in_vital__unique",
+                unique=True,
+                partialFilterExpression={"id_in_vital": {"$exists": True, "$type": "string"}},
+            ),
         ]
 
     google_identity: nested_models.GCloudIdentityPlatformDataDTO
+    id_in_vital: str | None

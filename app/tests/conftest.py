@@ -5,7 +5,7 @@ from beanie import init_beanie
 from motor.motor_asyncio import AsyncIOMotorClient
 
 from app.api.app import app
-from app.api.users.documents import User
+from app.api.users.models import User
 from app.core.settings import settings
 
 

@@ -1,12 +1,13 @@
 from pathlib import Path
 
-from pydantic import BaseModel
+from pydantic import BaseModel, field_validator
 from pydantic_settings import (
     BaseSettings,
     PydanticBaseSettingsSource,
     SettingsConfigDict,
     YamlConfigSettingsSource,
 )
+from vital.environment import VitalEnvironment
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -21,6 +22,24 @@ class MongoDBConfig(BaseModel):
     db_name: str
 
 
+class WearablesJunctionConfig(BaseModel):
+    team_api_key: str
+    environment: VitalEnvironment
+
+    @field_validator("environment", mode="before")
+    @classmethod
+    def parse_environment(cls, value: str | VitalEnvironment) -> VitalEnvironment:
+        match value:
+            case str():
+                if value.upper() in VitalEnvironment.__members__:
+                    return VitalEnvironment[value.upper()]
+
+                return VitalEnvironment(value)
+
+            case VitalEnvironment():
+                return value
+
+
 class Settings(BaseSettings):
     model_config = SettingsConfigDict(
         yaml_file="env.yaml",
@@ -33,6 +52,8 @@ class Settings(BaseSettings):
     AUDIENCE: str
 
     FIREBASE_CONFIG: FirebaseConfig
+
+    WEARABLES_JUNCTION_CONFIG: WearablesJunctionConfig
 
     @classmethod
     def settings_customise_sources(

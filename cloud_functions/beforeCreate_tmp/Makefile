@@ -7,4 +7,4 @@ deploy:
 		--entry-point=beforeCreate \
 		--source=. \
 		--region=europe-central2 \
-		--project=fast-academy-458612-a4
+		--project=youthgcloudsandbox

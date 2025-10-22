@@ -1,27 +1,33 @@
 from contextlib import asynccontextmanager
+from typing import cast
 
-from beanie import init_beanie
 from fastapi import FastAPI
+from httpx import AsyncClient
 from motor.motor_asyncio import AsyncIOMotorClient
+from vital import AsyncVital
 
+from app.core.mongodb.get_mongodb_client import get_mongodb_client
 from app.core.settings import settings
 
 
 async def on_startup_event(app: FastAPI) -> None:
-    client = AsyncIOMotorClient(settings.MONGO_DB_CONFIG.uri)
-    database = client[settings.MONGO_DB_CONFIG.db_name]
-    await init_beanie(
-        database=database,
-        document_models=[
-            "app.api.users.documents.User",
-        ],
-    )
+    mongodb_client = get_mongodb_client()
+    await mongodb_client.initiate_beanie(skip_indexes=False)
 
-    app.state.mongodb_database = database
+    app.state.mongodb_client = mongodb_client
+
+    app.state.httpx_async_client = AsyncClient()
+
+    app.state.async_vital = AsyncVital(
+        api_key=settings.WEARABLES_JUNCTION_CONFIG.team_api_key,
+        environment=settings.WEARABLES_JUNCTION_CONFIG.environment,
+        httpx_client=app.state.httpx_async_client,
+    )
 
 
 async def on_shutdown_event(app: FastAPI) -> None:
-    pass
+    cast(AsyncIOMotorClient, app.state.mongodb_client).close()
+    await cast(AsyncClient, app.state.httpx_async_client).aclose()
 
 
 @asynccontextmanager
